@@ -25,8 +25,8 @@ function defaultParameterValue(a, b = 100) {
  Функция должна возвращать все переданные в нее аргументы в виде массива
  Количество переданных аргументов заранее неизвестно
  */
-function returnArgumentsArray() {
-    return Array.prototype.slice.call(arguments);
+function returnArgumentsArray(...args) {
+    return args;
 }
 
 /*
@@ -54,9 +54,7 @@ function returnCounter(number = 0) {
  Функция должна принимать другую функцию (F) и некоторое количество дополнительных аргументов
  Функция должна привязать переданные аргументы к функции F и вернуть получившуюся функцию
  */
-function bindFunction(fn) {
-    var args = Array.prototype.slice.call(arguments, 1, arguments.length);
-
+function bindFunction(fn, ...args) {
     return fn.bind(null, ...args);
 }
 
