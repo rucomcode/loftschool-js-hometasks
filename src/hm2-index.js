@@ -10,6 +10,19 @@
  Зарпещено использовать встроенные методы для работы с массивами
  */
 function isAllTrue(array, fn) {
+    if (!Array.isArray(array) || !array.length) {
+        throw new Error("empty array");
+    }
+    if (typeof fn !== "function") {
+        throw new Error("fn is not a function");
+    }
+    for (var i = 0; i < array.length; i++) {
+        if (!fn(array[i])) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /*
@@ -22,17 +35,45 @@ function isAllTrue(array, fn) {
  Зарпещено использовать встроенные методы для работы с массивами
  */
 function isSomeTrue(array, fn) {
+    if (!Array.isArray(array) || !array.length) {
+        throw new Error("empty array");
+    }
+    if (typeof fn !== "function") {
+        throw new Error("fn is not a function");
+    }
+    for (var i = 0; i < array.length; i++) {
+        if (fn(array[i])) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /*
  Задача 3:
  Функция принимает заранее неизветсное количество аргументов, первым из которых является функция fn
- Функция должна поочередно запусти fn для каждого переданного аргумента (кроме самой fn)
+ Функция должна поочередно запустить fn для каждого переданного аргумента (кроме самой fn)
  Функция должна вернуть массив аргументов, для которых fn выбросила исключение
  Необходимо выбрасывать исключение в случаях:
  - fn не является функцией (с текстом "fn is not a function")
  */
-function returnBadArguments(fn) {
+function returnBadArguments(fn, ...args) {
+    var result = [];
+
+    if (typeof fn !== "function") {
+        throw new Error('fn is not a function');
+    }
+
+    for (var i = 0; i < args.length; i++) {
+        try {
+            fn(args[i]);
+        } catch (e) {
+            result.push(args[i]);
+        }
+    }
+
+    return result;
 }
 
 /*
@@ -41,9 +82,13 @@ function returnBadArguments(fn) {
  Исправьте условие внутри if таким образом, чтобы функция возвращала true
  */
 function findError(data1, data2) {
+    debugger;
     return (function() {
         for (var i = 0; i < data1.length; i++) {
-            if (data1[i] !== data2[i]) {
+            if (isNaN(data1[i]) && isNaN(data2[i])) {
+                continue;
+            }
+            if (data1[i] != data2[i]) {
                 return false;
             }
         }
@@ -66,7 +111,30 @@ function findError(data1, data2) {
  - number не является числом (с текстом "number is not a number")
  - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator(number) {
+function calculator(number = 0) {
+    if (!isFinite(number)) {
+        throw new Error('number is not a number');
+    }
+    return {
+        sum (...args) {
+            return args.reduce((sum, arg) => sum += arg, number);
+        },
+
+        dif (...args) {
+            return args.reduce((sum, arg) => sum -= arg, number);
+        },
+
+        div (...args) {
+            if (args.some(arg => !arg)) {
+                throw new Error("division by 0");
+            }
+            return args.reduce((sum, arg) => sum /= arg, number);
+        },
+
+        mul (...args) {
+            return args.reduce((sum, arg) => sum *= arg, number);
+        }
+    }
 }
 
 export {
