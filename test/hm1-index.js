@@ -6,7 +6,7 @@ import {
     returnFnResult,
     returnCounter,
     bindFunction
-} from '../src/index';
+} from '../src/hm1-index';
 
 describe('ДЗ 1 - функции', () => {
     describe('returnFirstArgument', () => {
