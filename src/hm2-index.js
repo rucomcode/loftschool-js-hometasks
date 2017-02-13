@@ -11,10 +11,10 @@
  */
 function isAllTrue(array, fn) {
     if (!Array.isArray(array) || !array.length) {
-        throw new Error("empty array");
+        throw new Error('empty array');
     }
-    if (typeof fn !== "function") {
-        throw new Error("fn is not a function");
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
     }
     for (var i = 0; i < array.length; i++) {
         if (!fn(array[i])) {
@@ -36,10 +36,10 @@ function isAllTrue(array, fn) {
  */
 function isSomeTrue(array, fn) {
     if (!Array.isArray(array) || !array.length) {
-        throw new Error("empty array");
+        throw new Error('empty array');
     }
-    if (typeof fn !== "function") {
-        throw new Error("fn is not a function");
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
     }
     for (var i = 0; i < array.length; i++) {
         if (fn(array[i])) {
@@ -61,7 +61,7 @@ function isSomeTrue(array, fn) {
 function returnBadArguments(fn, ...args) {
     var result = [];
 
-    if (typeof fn !== "function") {
+    if (typeof fn !== 'function') {
         throw new Error('fn is not a function');
     }
 
@@ -82,7 +82,6 @@ function returnBadArguments(fn, ...args) {
  Исправьте условие внутри if таким образом, чтобы функция возвращала true
  */
 function findError(data1, data2) {
-    debugger;
     return (function() {
         for (var i = 0; i < data1.length; i++) {
             if (isNaN(data1[i]) && isNaN(data2[i])) {
@@ -115,6 +114,7 @@ function calculator(number = 0) {
     if (!isFinite(number)) {
         throw new Error('number is not a number');
     }
+
     return {
         sum (...args) {
             return args.reduce((sum, arg) => sum += arg, number);
@@ -126,8 +126,9 @@ function calculator(number = 0) {
 
         div (...args) {
             if (args.some(arg => !arg)) {
-                throw new Error("division by 0");
+                throw new Error('division by 0');
             }
+
             return args.reduce((sum, arg) => sum /= arg, number);
         },
 
