@@ -58,7 +58,7 @@ function deleteProperty(obj, prop) {
  Функция должна проверить существует ли укзаанное свойство в указанном объекте
  */
 function hasProperty(obj, prop) {
-    return obj[prop] !== undefined;
+    return prop in obj;
 }
 
 /*
@@ -74,7 +74,7 @@ function getEnumProps(obj) {
  Функция должна перебрать все свойства объекта, преобразовать их имена в верхний регистра и вернуть в виде массива
  */
 function upperProps(obj) {
-    return Object.keys(obj).map((item) => String(item).toUpperCase());
+    return Object.keys(obj).map((item) => item.toUpperCase());
 }
 
 /*
