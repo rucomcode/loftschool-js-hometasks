@@ -3,7 +3,7 @@ module.exports = function(config) {
         basePath: '',
         frameworks: ['mocha'],
         files: [
-            'test/**/*.js'
+            'test/**/hm4-index.js'
         ],
         preprocessors: {
             'test/**/*.js': ['webpack', 'sourcemap'],

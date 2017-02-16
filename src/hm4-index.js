@@ -7,6 +7,11 @@
  * @return {Element}
  */
 function createDivWithText(text) {
+    var div = document.createElement('div');
+
+    div.innerHTML = text;
+
+    return div;
 }
 
 /**
@@ -16,6 +21,11 @@ function createDivWithText(text) {
  * @return {Element}
  */
 function createAWithHref(hrefValue) {
+    var a = document.createElement('a');
+
+    a.setAttribute('href', hrefValue);
+
+    return a;
 }
 
 /**
@@ -25,6 +35,7 @@ function createAWithHref(hrefValue) {
  * @param {Element} where - куда вставлять
  */
 function prepend(what, where) {
+    where.insertBefore(what, where.childNodes[0]);
 }
 
 /**
@@ -42,6 +53,16 @@ function prepend(what, where) {
  * т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
+    let children = where.children,
+        result = [];
+
+    for (let i = 0; i < children.length - 1; i++) {
+        if (children[i].nextSibling.tagName === 'P') {
+            result.push(children[i]);
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -55,7 +76,7 @@ function findAllPSiblings(where) {
 function findError(where) {
     var result = [];
 
-    for (var child of where.childNodes) {
+    for (var child of where.children) {
         result.push(child.innerText);
     }
 
@@ -76,6 +97,13 @@ function findError(where) {
  * должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+    var nodes = where.childNodes;
+
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].nodeType === 3) {
+            where.removeChild(nodes[i--]);
+        }
+    }
 }
 
 /**
@@ -89,6 +117,15 @@ function deleteTextNodes(where) {
  * должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
+    var nodes = where.childNodes;
+
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].nodeType === 3) {
+            where.removeChild(nodes[i--]);
+        } else {
+            deleteTextNodesRecursive(nodes[i]);
+        }
+    }
 }
 
 /**
@@ -114,6 +151,44 @@ function deleteTextNodesRecursive(where) {
  * }
  */
 function collectDOMStat(root) {
+    var texts = 0,
+        tags = {},
+        classes = {};
+
+    function collectDOMElements(root) {
+        var nodes = root.childNodes;
+
+        for (var i = 0; i < nodes.length; i++) {
+
+            // texts
+            if (nodes[i].nodeType === 3) {
+                texts++;
+            } else {
+                // tags
+                var tagName = nodes[i].tagName;
+
+                tags[tagName] = (tagName in tags) ? tags[tagName] + 1 : 1;
+
+                // classes
+                var classList = nodes[i].classList;
+
+                for (var className of classList) {
+                    classes[className] = (className in classes) ? classes[className] + 1 : 1;
+                }
+            }
+
+            if (nodes[i].childNodes && nodes[i].childNodes.length) {
+                collectDOMElements(nodes[i]);
+            }
+        }
+    }
+    collectDOMElements(root);
+
+    return {
+        texts: texts,
+        tags: tags,
+        classes: classes
+    };
 }
 
 /**
@@ -121,7 +196,7 @@ function collectDOMStat(root) {
  * Функция должна отслеживать добавление и удаление элементов внутри элемента where
  * Как только в where добавляются или удаляются элемента,
  * необходимо сообщать об этом при помощи вызова функции fn со специальным аргументом
- * В качестве аргумента должен быть передан объек с двумя свойствами:
+ * В качестве аргумента должен быть передан объект с двумя свойствами:
  * - type: типа события (insert или remove)
  * - nodes: массив из удаленных или добавленных элементов (а зависимости от события)
  * Отслеживание должно работать вне зависимости от глубины создаваемых/удаляемых элементов
@@ -148,6 +223,22 @@ function collectDOMStat(root) {
  * }
  */
 function observeChildNodes(where, fn) {
+    // var config = { childList: true, subtree: true };
+
+    var config = { attributes: true, childList: true, characterData: true };
+
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                fn({ type: 'insert', nodes: Array.prototype.slice.call(mutation.addedNodes) });
+            }
+            if (mutation.removedNodes.length) {
+                fn({ type: 'remove', nodes: Array.prototype.slice.call(mutation.removedNodes) });
+            }
+        });
+    });
+
+    observer.observe(where, config);
 }
 
 export {
