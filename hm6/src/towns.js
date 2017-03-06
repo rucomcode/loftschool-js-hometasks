@@ -36,7 +36,6 @@ let homeworkContainer = document.querySelector('#homework-container');
  * @return {Promise<Array<{name: string}>>}
  */
 function loadTowns() {
-    var a;
     return require('./index').loadAndSortTowns();
 }
 
@@ -54,16 +53,47 @@ function loadTowns() {
  * @return {boolean}
  */
 function isMatching(full, chunk) {
+    return chunk.length && (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1);
 }
 
 let loadingBlock = homeworkContainer.querySelector('#loading-block');
 let filterBlock = homeworkContainer.querySelector('#filter-block');
 let filterInput = homeworkContainer.querySelector('#filter-input');
 let filterResult = homeworkContainer.querySelector('#filter-result');
+let filterFailed = homeworkContainer.querySelector('#filter-failed');
+let filterReload = homeworkContainer.querySelector('#filter-reload');
+let towns;
+
+function tryToLoadTowns () {
+    loadingBlock.style.display = 'block';
+    filterBlock.style.display = 'none';
+    filterFailed.style.display = 'none';
+
+    loadTowns().then((response) => {
+        towns = response;
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'block';
+        filterFailed.style.display = 'none';
+    }).catch(() => {
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'none';
+        filterFailed.style.display = 'block';
+    });
+}
+
+tryToLoadTowns();
 
 filterInput.addEventListener('keyup', function() {
-    let value = this.value.trim();
+    let value = this.value.trim(),
+        filteredTowns = towns.filter((item) => isMatching(item.name, value));
+
+    filterResult.innerHTML = '';
+    filteredTowns.forEach((item) => {
+        filterResult.innerHTML += `<div>${item.name}</div>`;
+    });
 });
+
+filterReload.addEventListener('click', tryToLoadTowns);
 
 export {
     loadTowns,
