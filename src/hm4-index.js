@@ -56,8 +56,8 @@ function findAllPSiblings(where) {
     let children = where.children,
         result = [];
 
-    for (let i = 0; i < children.length - 1; i++) {
-        if (children[i].nextSibling.tagName === 'P') {
+    for (let i = 0; i < children.length; i++) {
+        if (children[i].nextSibling && children[i].nextSibling.tagName === 'P') {
             result.push(children[i]);
         }
     }
@@ -159,7 +159,6 @@ function collectDOMStat(root) {
         var nodes = root.childNodes;
 
         for (var i = 0; i < nodes.length; i++) {
-
             // texts
             if (nodes[i].nodeType === 3) {
                 texts++;
@@ -167,13 +166,13 @@ function collectDOMStat(root) {
                 // tags
                 var tagName = nodes[i].tagName;
 
-                tags[tagName] = (tagName in tags) ? tags[tagName] + 1 : 1;
+                tags[tagName] = (tags.hasOwnProperty(tagName)) ? tags[tagName] + 1 : 1;
 
                 // classes
                 var classList = nodes[i].classList;
 
                 for (var className of classList) {
-                    classes[className] = (className in classes) ? classes[className] + 1 : 1;
+                    classes[className] = (classes.hasOwnProperty(className)) ? classes[className] + 1 : 1;
                 }
             }
 
@@ -223,10 +222,7 @@ function collectDOMStat(root) {
  * }
  */
 function observeChildNodes(where, fn) {
-    // var config = { childList: true, subtree: true };
-
     var config = { attributes: true, childList: true, characterData: true };
-
     var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.addedNodes.length) {
