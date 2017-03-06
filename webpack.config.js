@@ -14,12 +14,12 @@ loaders.push({
 
 module.exports = {
     entry: {
-        main: './hm6/src/index.js',
-        towns: './hm6/src/towns.js'
+        main: './hm7/src/index.js',
+        cookie: './hm7/src/cookie.js'
     },
     output: {
         filename: '[chunkhash].js',
-        path: './dist'
+        path: './hm7/dist'
     },
     devtool: 'source-map',
     module: {
@@ -39,10 +39,10 @@ module.exports = {
             chunks: ['main']
         }),
         new HtmlPlugin({
-            title: 'Towns',
-            template: 'hm6/towns.hbs',
-            filename: 'hm6/towns.html',
-            chunks: ['towns']
+            title: 'Cookie editor',
+            template: 'hm7/cookie.hbs',
+            filename: 'hm7/cookie.html',
+            chunks: ['cookie']
         }),
         new CleanWebpackPlugin(['dist'])
     ]
