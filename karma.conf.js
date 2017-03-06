@@ -3,11 +3,11 @@ module.exports = function(config) {
         basePath: '',
         frameworks: ['mocha'],
         files: [
-            'hm5/test/index.js',
-            'hm5/test/dnd.js'
+            'hm6/test/1-index.js',
+            'hm6/test/2-towns.js'
         ],
         preprocessors: {
-            'hm5/test/**/*.js': ['webpack', 'sourcemap'],
+            'hm6/test/**/*.js': ['webpack', 'sourcemap'],
         },
         webpack: require('./webpack.config.test'),
         webpackMiddleware: {
