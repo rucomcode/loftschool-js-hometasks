@@ -6,7 +6,7 @@ import {
     emulateClick,
     delegate,
     once
-} from '../../src/hm5/index';
+} from '../src/index';
 
 describe('ДЗ 5.1 - DOM Events', () => {
     describe('addListener', () => {

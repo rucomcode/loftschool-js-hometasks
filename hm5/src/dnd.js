@@ -56,8 +56,6 @@ function createDiv() {
     div.style.top = Math.random() * (window.innerHeight - 100) - height + 100 + 'px';
     div.style.zIndex = 0;
 
-
-    homeworkContainer.style.position = 'relative';
     return div;
 }
 
@@ -67,44 +65,31 @@ function createDiv() {
  * @param {Element} target
  */
 function addListeners(target) {
-    var pressed = false,
-        initialLeft,
+    var initialLeft,
         initialTop,
         dragStartX,
         dragStartY,
         currentElement;
 
     target.addEventListener('mousedown', function(e) {
-        pressed = true;
-        initialLeft = parseInt(e.target.style.left);
-        initialTop = parseInt(e.target.style.top);
-        currentElement = e.target;
+        e.preventDefault();
 
+        currentElement = e.target;
+        initialLeft = parseInt(currentElement.style.left);
+        initialTop = parseInt(currentElement.style.top);
         dragStartX = e.clientX;
         dragStartY = e.clientY;
-
-        e.target.style.zIndex = 1;
-        console.log('mousedown', e.clientX, e.clientY);
     });
 
     target.addEventListener('mousemove', function(e) {
-        console.log(!!currentElement, pressed);
         if (currentElement) {
             currentElement.style.left = initialLeft - (dragStartX - e.clientX) + 'px';
             currentElement.style.top = initialTop - (dragStartY - e.clientY) + 'px';
-        // } else {
-            // currentElement = null;
-            // pressed = false;
-            // console.log('drop');
         }
-        console.log('mousemove move', e.clientX, e.clientY);
     });
 
-    target.addEventListener('mouseup', function(e) {
-        pressed = false;
+    target.addEventListener('mouseup', function() {
         currentElement = null;
-        e.target.style.zIndex = 0;
-        console.log('mouseup', e.clientX, e.clientY);
     });
 }
 

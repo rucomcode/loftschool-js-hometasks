@@ -1,5 +1,5 @@
 import assert from 'assert';
-let template = require('../../hm5/dnd-content.hbs');
+let template = require('../dnd-content.hbs');
 
 describe('ДЗ 5.2 - Div D&D', () => {
     let homeworkContainer = document.createElement('div');
@@ -9,7 +9,7 @@ describe('ДЗ 5.2 - Div D&D', () => {
     homeworkContainer.id = 'homework-container';
     homeworkContainer.innerHTML = template();
     document.body.appendChild(homeworkContainer);
-    dndPage = require('../../src/hm5/dnd');
+    dndPage = require('../src/dnd');
 
     describe('Функциональное тестирование', () => {
         describe('createDiv', () => {
