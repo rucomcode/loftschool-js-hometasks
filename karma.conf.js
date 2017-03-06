@@ -3,8 +3,7 @@ module.exports = function(config) {
         basePath: '',
         frameworks: ['mocha'],
         files: [
-            'test/hm5/index.js',
-            'test/hm5/dnd.js'
+            'test/**/*.js'
         ],
         preprocessors: {
             'test/**/*.js': ['webpack', 'sourcemap'],
