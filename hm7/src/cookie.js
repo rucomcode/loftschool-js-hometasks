@@ -53,6 +53,7 @@ let listTable = homeworkContainer.querySelector('#list-table tbody');
  * @return {boolean}
  */
 function isMatching(full, chunk) {
+    return full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1;
 }
 
 /**
@@ -62,11 +63,68 @@ function isMatching(full, chunk) {
  * @param value - значение cookie
  */
 function createCookieTr(name, value) {
+    let tr = document.createElement('tr');
+
+    tr.innerHTML = `<td>${name}</td>
+                    <td>${value}</td>
+                    <td><button class='delete-cookie'>x</button></td>`;
+
+    return tr;
 }
 
-filterNameInput.addEventListener('keyup', function() {
+function createArrayFromCookies(cookies) {
+    var result = [];
+    var cookiesArray = cookies.split('; ').filter(item => Boolean(item));
+
+    cookiesArray.forEach(item => {
+        let splitedCookie = item.split('=');
+        let obj = {
+            name: splitedCookie[0],
+            value: splitedCookie[1]
+        };
+
+        result.push(obj);
+    });
+
+    return result;
+}
+
+function filterCookies(cookiesArray, filterValue) {
+    return cookiesArray.filter(item => {
+        return isMatching(item.name, filterValue) || isMatching(item.value, filterValue);
+    });
+}
+
+function showTable(cookiesArray) {
+    listTable.innerHTML = '';
+    cookiesArray.forEach(item => {
+        let tr = createCookieTr(item.name, item.value);
+
+        listTable.appendChild(tr);
+    });
+}
+
+function showFileredTable(cookies, filerValue) {
+    let cookiesArray = createArrayFromCookies(cookies);
+    let filteredCookies = filterCookies(cookiesArray, filerValue);
+
+    showTable(filteredCookies);
+}
+
+filterNameInput.addEventListener('keyup', function(e) {
+    showFileredTable(document.cookie, e.target.value)
 });
 
 addButton.addEventListener('click', () => {
+    document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+    showFileredTable(document.cookie, filterNameInput.value);
 });
 
+listTable.addEventListener('click', (e) => {
+    if (e.target.className === 'delete-cookie') {
+        let name = e.target.parentNode.parentNode.children[0].innerText;
+
+        document.cookie = `${name}=;expires=${new Date(0)}`;
+        showFileredTable(document.cookie, filterNameInput.value);
+    }
+});
